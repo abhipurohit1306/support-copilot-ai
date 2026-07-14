@@ -6,6 +6,7 @@ crawl4ai
 
 langchain
 langchain-community
+langchain-huggingface
 
 chromadb
 
