@@ -1,3 +1,4 @@
+from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 class DocumentChunker:
@@ -13,6 +14,14 @@ class DocumentChunker:
             chunk_overlap=chunk_overlap,
         )
 
-    def chunk(self, text: str):
+    def chunk(self, text: str, metadata = None):
+        metadata = metadata or {}
+        chunks = self.text_splitter.split_text(text)
 
-        return self.text_splitter.split_text(text)
+        return [
+            Document(
+                page_content=chunk,
+                metadata=metadata
+            )
+            for chunk in chunks
+        ]
