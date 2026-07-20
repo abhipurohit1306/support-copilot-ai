@@ -1,6 +1,7 @@
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+
 class DocumentChunker:
 
     def __init__(
@@ -14,14 +15,32 @@ class DocumentChunker:
             chunk_overlap=chunk_overlap,
         )
 
-    def chunk(self, text: str, metadata = None):
-        metadata = metadata or {}
-        chunks = self.text_splitter.split_text(text)
+    def chunk(self, crawl_results):
 
-        return [
-            Document(
-                page_content=chunk,
-                metadata=metadata
-            )
-            for chunk in chunks
-        ]
+        documents = []
+
+        for result in crawl_results:
+
+            # Skip failed pages
+            if not result.success:
+                continue
+
+            # Skip empty pages
+            if not result.markdown:
+                continue
+
+            chunks = self.text_splitter.split_text(result.markdown)
+
+            for chunk in chunks:
+
+                documents.append(
+                    Document(
+                        page_content=chunk,
+                        metadata={
+                            "source": result.url,
+                            "title": getattr(result, "title", ""),
+                        },
+                    )
+                )
+
+        return documents
