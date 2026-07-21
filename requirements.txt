@@ -17,3 +17,5 @@ sentence-transformers
 langgraph
 
 pydantic
+
+langchain_google_genai

@@ -25,8 +25,13 @@ class WebsiteCrawler:
         async with AsyncWebCrawler() as crawler:
 
             results = await crawler.arun(
-                url=url,
-                config=config,
-            )
+            url=url,
+            config=config,
+        )
+
+        print("=" * 60)
+        print(type(results))
+        print(results)
+        print("=" * 60)
 
         return results

@@ -3,6 +3,7 @@ from app.chunker import DocumentChunker
 from app.embeddings import EmbeddingGenerator
 from app.vector_store import VectorStore
 from pathlib import Path
+from app.logger import logger
 
 
 class IngestionService:
@@ -16,13 +17,8 @@ class IngestionService:
     Store in ChromaDB
     """
     def knowledge_base_exists(self) -> bool:
-        """
-        Checks whether a persisted ChromaDB knowledge base already exists.
-        """
-
-        chroma_path = Path("data/chroma_db")
-
-        return chroma_path.exists() and any(chroma_path.iterdir())
+        return self.vector_store.count() > 0
+    
 
     def __init__(self):
 
@@ -38,16 +34,26 @@ class IngestionService:
 
     async def ingest_website(self, url: str):
 
-        print("Step 1: Crawling Website...")
+        logger.info("Step 1: Crawling Website...")
 
         pages = await self.crawler.crawl(url)
 
-        print("Step 2: Chunking Documents...")
+        logger.debug("Pages type: %s", type(pages))
+        logger.info("Pages crawled: %d", len(pages))
+
+        logger.info("Step 2: Chunking Documents...")
 
         documents = self.chunker.chunk(pages)
 
-        print("Step 3: Storing in ChromaDB...")
+        logger.info("Chunks created: %d", len(documents))
+
+        logger.info("Step 3: Storing in ChromaDB...")
 
         self.vector_store.add_documents(documents)
 
-        print("Knowledge Base Created Successfully!")
+        logger.info(
+            "Documents indexed: %d",
+            self.vector_store.count()
+        )
+
+        logger.info("Knowledge Base Created Successfully!")

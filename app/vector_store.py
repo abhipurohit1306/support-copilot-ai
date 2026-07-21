@@ -21,3 +21,7 @@ class VectorStore:
             query=query,
             k=k,
         )
+
+    def count(self):
+
+        return self.vector_db._collection.count()
