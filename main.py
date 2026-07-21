@@ -28,7 +28,7 @@ async def main():
         logger.info("Creating knowledge base...")
 
         await ingestion.ingest_website(
-            "https://docs.crawl4ai.com"
+            "https://fastapi.tiangolo.com/"
         )
 
     logger.info("Knowledge Base Ready!")

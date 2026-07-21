@@ -11,9 +11,12 @@ class VectorStore:
             persist_directory="data/chroma_db",
         )
 
-    def add_documents(self, documents):
+    def add_documents(self, documents, batch_size=1000):
+        total = len(documents)
 
-        self.vector_db.add_documents(documents)
+        for i in range(0, total, batch_size):
+            batch = documents[i:i + batch_size]
+            self.vector_db.add_documents(batch)
 
     def similarity_search(self, query, k=3):
 
