@@ -57,3 +57,9 @@ class IngestionService:
         )
 
         logger.info("Knowledge Base Created Successfully!")
+
+        return {
+            "pages_crawled": len(pages),
+            "chunks_created": len(documents),
+            "documents_indexed": self.vector_store.count(),
+        }
