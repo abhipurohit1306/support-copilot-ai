@@ -20,7 +20,7 @@ class VectorStore:
 
     def similarity_search(self, query, k=3):
 
-        return self.vector_db.similarity_search(
+        return self.vector_db.similarity_search_with_score(
             query=query,
             k=k,
         )

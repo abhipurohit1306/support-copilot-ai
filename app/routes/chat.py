@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.schemas.chat import ChatRequest, ChatResponse
-from app.services import chatbot
+from app.graph.graph import support_graph
 
 router = APIRouter(tags=["Chat"])
 
@@ -12,8 +12,12 @@ router = APIRouter(tags=["Chat"])
 )
 async def chat(request: ChatRequest):
 
-    answer = chatbot.ask(request.question)
+    state = support_graph.invoke(
+        {
+            "question": request.question,
+        }
+    )
 
     return ChatResponse(
-        answer=answer
+        answer=state["response"]
     )

@@ -1,5 +1,4 @@
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnableLambda, RunnablePassthrough
 
 from app.llm import GeminiLLM
 from app.prompt import SupportPrompt
@@ -30,28 +29,25 @@ class SupportChatbot:
 
         self.llm = GeminiLLM().get_llm()
 
-        self.chain = (
-            {
-                "context": RunnableLambda(self._retrieve_context),
-                "question": RunnablePassthrough(),
-            }
-            | self.prompt
+        self.chain = ( 
+            self.prompt
             | self.llm
             | StrOutputParser()
         )
 
-    # def _retrieve_context(self, question: str):
+    def ask(self, question):
 
-    #     documents = self.retriever.retrieve(question)
+        results = self.retriever.retrieve(question)
 
-    #     return "\n\n".join(
-    #         document.page_content
-    #         for document in documents
-    #     )
+        scores = [
+            item["score"]
+            for item in results
+        ]
 
-    def _retrieve_context(self, question: str):
-
-        documents = self.retriever.retrieve(question)
+        documents = [
+            item["document"]
+            for item in results
+        ]
 
         logger.debug("=" * 60)
         logger.debug("Retrieved %d document(s)", len(documents))
@@ -61,10 +57,21 @@ class SupportChatbot:
             logger.debug("-" * 40)
             logger.debug(doc.page_content[:500])
 
-        return "\n\n".join(
+        context = "\n\n".join(
             document.page_content
             for document in documents
         )
 
-    def ask(self, question: str):
-        return self.chain.invoke(question)
+        answer = self.chain.invoke(
+            {
+                "question": question,
+                "context": context,
+            }
+        )
+        
+        return {
+            "answer": answer,
+            "documents": documents,
+            "scores": scores,
+            "best_score": min(scores) if scores else None,
+        }

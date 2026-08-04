@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-import traceback
+from app.logger import logger
 from app.schemas.ingest import IngestRequest
 from app.ingestion import IngestionService
 
@@ -23,7 +23,7 @@ async def ingest(request: IngestRequest):
         }
 
     except Exception as e:
-        traceback.print_exc() 
+        logger.exception("Failed to ingest website")
 
         raise HTTPException(
             status_code=500,
