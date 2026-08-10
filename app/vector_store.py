@@ -5,6 +5,8 @@ class VectorStore:
 
     def __init__(self, embedding_model):
 
+        self.embedding_model = embedding_model
+
         self.vector_db = Chroma(
             collection_name="support_copilot",
             embedding_function=embedding_model,
@@ -12,11 +14,23 @@ class VectorStore:
         )
 
     def add_documents(self, documents, batch_size=1000):
+
         total = len(documents)
 
         for i in range(0, total, batch_size):
+
             batch = documents[i:i + batch_size]
+
             self.vector_db.add_documents(batch)
+
+    def clear(self):
+
+        collection = self.vector_db._collection
+
+        ids = collection.get()["ids"]
+
+        if ids:
+            collection.delete(ids=ids)
 
     def similarity_search(self, query, k=3):
 

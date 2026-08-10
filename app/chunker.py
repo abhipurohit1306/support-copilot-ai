@@ -33,12 +33,20 @@ class DocumentChunker:
 
             for chunk in chunks:
 
+                print(
+                    "CHUNK METADATA:",
+                    {
+                        "source": result.url,
+                        "title": result.metadata.get("title", ""),
+                    }
+                )
+
                 documents.append(
                     Document(
                         page_content=chunk,
                         metadata={
                             "source": result.url,
-                            "title": getattr(result, "title", ""),
+                            "title": result.metadata.get("title", ""),
                         },
                     )
                 )

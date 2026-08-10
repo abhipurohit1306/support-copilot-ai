@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 
+
 class ChatRequest(BaseModel):
     question: str = Field(
         ...,
@@ -8,5 +9,12 @@ class ChatRequest(BaseModel):
     )
 
 
+class SourceInfo(BaseModel):
+    title: str
+    source: str
+    score: float
+
+
 class ChatResponse(BaseModel):
     answer: str
+    sources: list[SourceInfo]

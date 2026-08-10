@@ -41,6 +41,8 @@ def greeting_node(state: GraphState):
         "How can I help you today?"
     )
 
+    state["sources"] = []
+
     logger.info("Greeting response generated.")
 
     return state
@@ -52,6 +54,8 @@ def generate_node(state: GraphState):
     )
 
     state["answer"] = result["answer"]
+
+    state["sources"] = result["sources"]
 
     state["best_score"] = result["best_score"]
 

@@ -48,7 +48,7 @@ class IngestionService:
         logger.info("Chunks created: %d", len(documents))
 
         logger.info("Step 3: Storing in ChromaDB...")
-
+        self.vector_store.clear()
         self.vector_store.add_documents(documents)
 
         logger.info(

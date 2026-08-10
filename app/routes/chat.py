@@ -19,5 +19,6 @@ async def chat(request: ChatRequest):
     )
 
     return ChatResponse(
-        answer=state["response"]
+        answer=state["response"],
+        sources=state["sources"],
     )
