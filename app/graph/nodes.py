@@ -67,7 +67,18 @@ def generate_node(state: GraphState):
     return state
 
 def confidence_node(state: GraphState):
+
     best_score = state["best_score"]
+
+    if best_score is None:
+        state["confidence"] = "low"
+
+        logger.warning(
+            "No retrieval score available. Treating confidence as low."
+        )
+
+        return state
+
     if best_score <= CONFIDENCE_THRESHOLD:
         state["confidence"] = "high"
     else:
@@ -78,6 +89,7 @@ def confidence_node(state: GraphState):
         state["confidence"],
         best_score,
     )
+
     return state
 
 def respond_node(state: GraphState):
