@@ -120,12 +120,12 @@ class SupportChatbot:
         for item in results:
 
             sources.append(
-                {
-                    "title": item["source_info"]["title"],
-                    "source": item["source_info"]["source"],
-                    "score": item["score"],
-                }
-            )
+            {
+                "title": item["metadata"].get("title", ""),
+                "source": item["metadata"].get("source", ""),
+                "score": item["score"],
+            }
+        )
 
         unique_sources = []
 
