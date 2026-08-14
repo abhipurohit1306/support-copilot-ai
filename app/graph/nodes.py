@@ -101,12 +101,28 @@ def respond_node(state: GraphState):
     )
     return state
 
+
 def escalate_node(state: GraphState):
+
+    state["escalation_reason"] = (
+        "Low retrieval confidence"
+    )
+
+    state["escalation_context"] = {
+        "session_id": state["session_id"],
+        "question": state["question"],
+        "reason": state["escalation_reason"],
+        "retrieval_score": state["best_score"],
+    }
+
     state["response"] = (
         "I'm not confident enough to answer your question accurately.\n\n"
         "I've forwarded your request to a human support agent."
     )
+
     logger.warning(
-        "Low confidence detected. Escalating to human support."
+        "Escalating conversation. Context: %s",
+        state["escalation_context"],
     )
+
     return state

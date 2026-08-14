@@ -47,7 +47,9 @@ async def chat(request: ChatRequest):
     )
 
     return ChatResponse(
-        session_id=session_id,
+        session_id=state["session_id"],
         answer=state["response"],
         sources=state["sources"],
+        escalated=state["confidence"] == "low",
+        escalation_reason=state.get("escalation_reason"),
     )

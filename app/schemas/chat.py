@@ -25,9 +25,8 @@ class SourceInfo(BaseModel):
 
 
 class ChatResponse(BaseModel):
-
     session_id: str
-
     answer: str
-
     sources: list[SourceInfo]
+    escalated: bool
+    escalation_reason: str | None
