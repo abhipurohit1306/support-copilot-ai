@@ -17,5 +17,32 @@ class SupportPrompt:
             Context: {context}
             Question: {question}
             Answer:
-        """
+            """
+        )
+
+
+class QueryRewritePrompt:
+
+    @staticmethod
+    def get_prompt():
+
+        return ChatPromptTemplate.from_template(
+            """
+            Rewrite the user's current question into a standalone
+            question that can be understood without conversation history.
+
+            Use the conversation history only to resolve references
+            such as "it", "they", "this", "that", or "the above".
+
+            Do not answer the question.
+            Return ONLY the rewritten standalone question.
+
+            Conversation History:
+            {history}
+
+            Current Question:
+            {question}
+
+            Standalone Question:
+            """
         )

@@ -49,8 +49,10 @@ def greeting_node(state: GraphState):
 
 
 def generate_node(state: GraphState):
+
     result = chatbot.ask(
-        state["question"]
+        state["question"],
+        state["history"],
     )
 
     state["answer"] = result["answer"]
