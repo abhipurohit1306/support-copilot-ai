@@ -22,10 +22,10 @@ async def ingest(request: IngestRequest):
             **result,
         }
 
-    except Exception as e:
+    except Exception:
         logger.exception("Failed to ingest website")
 
         raise HTTPException(
             status_code=500,
-            detail=str(e),
+            detail="Unable to ingest the website at the moment.",
         )
