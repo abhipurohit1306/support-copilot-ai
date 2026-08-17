@@ -6,6 +6,9 @@ from app.schemas.chat import ChatRequest, ChatResponse
 from app.graph.graph import support_graph
 from app.memory import conversation_memory
 
+from fastapi import APIRouter, Depends
+from app.auth import verify_api_key
+
 
 router = APIRouter(tags=["Chat"])
 
@@ -14,7 +17,7 @@ router = APIRouter(tags=["Chat"])
     "/chat",
     response_model=ChatResponse,
 )
-async def chat(request: ChatRequest):
+async def chat(request: ChatRequest, _: bool = Depends(verify_api_key),):
 
     session_id = request.session_id
 

@@ -1,7 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from app.logger import logger
 from app.schemas.ingest import IngestRequest
 from app.ingestion import IngestionService
+
+from app.auth import verify_api_key
 
 router = APIRouter(tags=["Ingestion"])
 
@@ -9,7 +11,7 @@ ingestion_service = IngestionService()
 
 
 @router.post("/ingest")
-async def ingest(request: IngestRequest):
+async def ingest(request: IngestRequest, _: bool = Depends(verify_api_key),):
 
     try:
 
